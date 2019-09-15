@@ -123,7 +123,7 @@ def get_search_domain_list(article_domain):
 
 def get_opposite(title, domain):
     u = []
-    for url in search(title + ' ' + domain, stop=3):
+    for url in search(title + ' ' + domain, stop=2):
             if domain in url:
                 if not url.strip('/').endswith('.pl'):
                     u.append(url)
@@ -140,14 +140,11 @@ class RateArticle(Resource):
     def post(self):
         errors = []
         args = parser.parse_args()
-        if is_too_old(args['publication_date']):
-            errors.append("This article seems old!")
-        if is_manipulative(args['title']):
-            errors.append("This article may be not objective!")
         opposition = get_opposite_articles(args['title'], args['domain'])
         token = 'gf3f4v36f6v3fv6i7346f' #mock
         return {
-            'errors': errors,
+            'is_objective': is_manipulative(args['title']),
+            'is_too_old': is_too_old(args['publication_date']),
             'opposition_articles': opposition,
             'feedback_token': token
         } ,200
@@ -157,7 +154,7 @@ class ProvideFeedback(Resource):
         return 200
 
 api.add_resource(RateArticle, '/article')
-api.add_resource(ProvideFeedback, '/feedback/<token>/<rate>/')
+api.add_resource(ProvideFeedback, '/feedback/<token>/<rate>')
 
 if __name__ == '__main__':
     app.run(debug=True)
