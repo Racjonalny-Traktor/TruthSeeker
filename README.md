@@ -15,7 +15,8 @@ Ask for article rate
 Returns
 ```
     {
-        "errors": [] //if empty no errors
+        "is_objective": is_manipulative(args['title']),
+        "is_too_old": is_too_old(args['publication_date']),
         "opposition_articles": [<link>, <link>]
         "feedback_token": "<token>"
     }
