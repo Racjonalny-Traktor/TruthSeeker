@@ -1,10 +1,3 @@
-from flask import Flask
-from flask_restful import Resource, Api
-from flask_restful import reqparse
-from flask_cors import CORS
-import datetime
-from googlesearch import search
-
 import re, string
 import morfeusz2
 from collections import OrderedDict
@@ -50,7 +43,7 @@ def sort_by_appears(data):
     data = list(OrderedDict.fromkeys(data))
     return sorted(data, key=lambda x: dict[x], reverse=True)
 
-with open('analyser/data_sets/possibly_manipulative_title_keywords.txt', 'r') as file:
+with open('../analyser/data_sets/possibly_manipulative_title_keywords.txt', 'r') as file:
     data = file.read().split('\n')
 
 weights = sort_by_appears(data)
@@ -62,80 +55,4 @@ def is_manipulative(sentence):
         if word in weights[:100]: return  True
     return False
 
-app = Flask(__name__)
-CORS(app)
-api = Api(app)
-
-parser = reqparse.RequestParser()
-parser.add_argument('title', type=str)
-parser.add_argument('publication_date', type=str)
-parser.add_argument('domain', type=str)
-
-def is_too_old(datestring):
-    return datestring[datestring.find("20")+2:datestring.find("20")+4] != "19"
-
-firstPoliticalOption = ['newsweek.pl',
-'wyborcza.pl',
-'tvn24.pl',
-'polityka.pl',
-'natemat.pl',
-'gazeta.pl',
-'wprost.pl',
-]
-secondPoliticalOption = [
-'dorzeczy.pl',
-'niezalezna.pl',
-'wsieciprawdy.pl',
-'gazetapolska.pl',
-]
-
-
-
-def get_search_domain_list(article_domain):
-    if article_domain in firstPoliticalOption:
-        return secondPoliticalOption
-    elif article_domain in secondPoliticalOption:
-        return firstPoliticalOption
-    else:
-        return []
-
-def get_opposite(title, domain):
-    u = []
-    for url in search(title + ' ' + domain, stop=3):
-            if domain in url:
-                if not url.strip('/').endswith('.pl'):
-                    u.append(url)
-                    break
-    return u
-def get_opposite_articles(title, original_domain):
-    u = []
-    for url in get_search_domain_list(original_domain):
-        u +=  get_opposite(title, url)
-    return u
-
-
-class RateArticle(Resource):
-    def post(self):
-        errors = []
-        args = parser.parse_args()
-        if is_too_old(args['publication_date']):
-            errors.append("This article seems old!")
-        if is_manipulative(args['title']):
-            errors.append("This article may be not objective!")
-        opposition = get_opposite_articles(args['title'], args['domain'])
-        token = 'gf3f4v36f6v3fv6i7346f' #mock
-        return {
-            'errors': errors,
-            'opposition_articles': opposition,
-            'feedback_token': token
-        } ,200
-
-class ProvideFeedback(Resource):
-    def get(self, token, rate):
-        return 200
-
-api.add_resource(RateArticle, '/article')
-api.add_resource(ProvideFeedback, '/feedback/<token>/<rate>/')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+print(weights)
