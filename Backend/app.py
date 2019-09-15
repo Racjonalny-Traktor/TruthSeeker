@@ -123,16 +123,21 @@ def get_search_domain_list(article_domain):
 
 def get_opposite(title, domain):
     u = []
-    for url in search(title + ' ' + domain, stop=2):
+    x = title + ' ' + domain
+    for url in search(x, stop=2):
             if domain in url:
                 if not url.strip('/').endswith('.pl'):
                     u.append(url)
                     break
     return u
+
 def get_opposite_articles(title, original_domain):
     u = []
-    for url in get_search_domain_list(original_domain):
-        u +=  get_opposite(title, url)
+    try:
+        for url in get_search_domain_list(original_domain):
+            u +=  get_opposite(title, url)
+            if len(u) == 3: break
+    except: pass
     return u
 
 
@@ -147,7 +152,7 @@ class RateArticle(Resource):
             'is_too_old': is_too_old(args['publication_date']),
             'opposition_articles': opposition,
             'feedback_token': token
-        } ,200
+        }, 200
 
 class ProvideFeedback(Resource):
     def get(self, token, rate):
