@@ -5,7 +5,7 @@ from flask_cors import CORS
 import datetime
 from googlesearch import search
 
-import re, string
+import re, string, random
 
 '''
     - Właścicielem praw autorskich programu Morfeusz 2 jest Instytut Podstaw Informatyki PAN.
@@ -124,7 +124,7 @@ def get_search_domain_list(article_domain):
 def get_opposite(title, domain):
     u = []
     x = title + ' ' + domain
-    for url in search(x, stop=2):
+    for url in search(x, stop=3):
             if domain in url:
                 if not url.strip('/').endswith('.pl'):
                     u.append(url)
@@ -134,9 +134,8 @@ def get_opposite(title, domain):
 def get_opposite_articles(title, original_domain):
     u = []
     try:
-        for url in get_search_domain_list(original_domain):
-            u +=  get_opposite(title, url)
-            if len(u) == 3: break
+         url = random.choice(get_search_domain_list(original_domain))
+         get_opposite(title, url)
     except: pass
     return u
 
