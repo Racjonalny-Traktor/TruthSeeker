@@ -1,0 +1,99 @@
+.snackbar {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+  width: 293px;
+  height: 62px;
+  border-radius: 50px;
+
+  z-index: 10;
+  margin-right: 24px;
+  margin-bottom: 16px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.political {
+  filter: drop-shadow(1px 1px 8px rgba(244, 67, 54, 1.6));
+  background-color: rgb(244, 67, 54);
+}
+
+.noPolitical {
+  filter: drop-shadow(1px 1px 8px rgba(0, 200, 83, 1.6));
+  background-color: rgb(0, 200, 83);
+}
+
+.btnOpenDrawer {
+  border: none;
+  background: transparent;
+}
+
+.btnOpenDrawer:hover {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.btnOpenDrawer:active {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.btnOpenDrawer:focus {
+  border: none;
+  outline: none;
+}
+
+a.btnOpenDrawer:link {
+  text-decoration: none;
+}
+
+a.btnOpenDrawer:visited {
+  text-decoration: none;
+}
+
+a.btnOpenDrawer:hover {
+  text-decoration: underline;
+}
+
+a.btnOpenDrawer:active {
+  text-decoration: underline;
+}
+
+#snackbar {
+  transition: height 350ms cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+#snackbar.open {
+  height: 250px;
+}
+
+.snackbarContent {
+  width: 100%;
+  height: 62px;
+
+  text-align: center;
+
+  position: absolute;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdownContent {
+  flex: 1;
+}
+
+.hidden {
+  display: none;
+}
